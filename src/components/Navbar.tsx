@@ -17,14 +17,14 @@ const initialThemeState = () => {
   return "dark";
 };
 
-// const initialThemeState = localStorage.getItem("theme")
-//   ? (localStorage.getItem("theme") as "light" | "dark")
-//   : window.matchMedia("(prefers-color-scheme: dark)").matches
-//   ? "dark"
-//   : "light";
-
 const Navbar = () => {
-  const [theme, setTheme] = useState<"light" | "dark">(initialThemeState);
+  const [hasMounted, setHasMounted] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">(initialThemeState());
+  console.log("antes del loading...", theme);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     if (theme === "dark") {
@@ -34,6 +34,10 @@ const Navbar = () => {
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  if (!hasMounted) {
+    return <>Cargando...</>;
+  }
 
   const handleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
